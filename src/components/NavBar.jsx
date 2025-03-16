@@ -7,7 +7,7 @@ const NavBar = () => {
       <header className='w-full h-12 md:h-20 flex justify-between items-center px-6 md:px-[7.5rem] py-3 md:py-[1.125rem] border-b-2 border-b-brown-300'>
             {/* logo Section */}
             <div className='w-6 md:w-11 h-6 md:h-11 flex items-center justify-center'>
-                <img src=".\logo.png" alt="logo-hh." className='w-[1.4375rem] md:w-[2.625rem] h-3 md:h-[1.375rem]'/>
+                <img src="/logo.png" alt="logo-hh." className='w-[1.4375rem] md:w-[2.625rem] h-3 md:h-[1.375rem]'/>
             </div>
 
             {/* Menu Section */}
