@@ -21,6 +21,8 @@
     --text-b1: 1rem; /* 1rem = 16 */
     --text-b2: 0.875rem; /* 14 ÷ 16*/
     --text-b3: 0.75rem; /* 12 ÷ 16*/
+
+    --font-poppins: 'Poppins', sans-serif;
 }
 
 body {

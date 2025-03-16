@@ -10,7 +10,7 @@ function App() {
   return (
     <>
       <NavBar/>
-      {/* <HeroSection/> */}
+      <HeroSection/>
     </>
   )
 }
