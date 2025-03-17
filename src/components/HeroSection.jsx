@@ -3,7 +3,7 @@ import React from 'react'
 const HeroSection = () => {
   return (
     <>
-      <section className='px-4 md:mx-[7.5rem] md:flex md:h-[33.0625rem] md:justify-center'>
+      <section className='px-4 md:mx-[7.5rem] md:flex md:h-auto md:justify-center'>
         {/* Top-Left Section */}
         <div className='md:w-96 md:mr-14'>
           <h2 className='mt-10 md:mt-[11.65625rem] text-center md:text-end text-brown-600 text-h2 md:text-h1 font-semibold'>Stay Informed, Stay Inspired</h2>
