@@ -11,7 +11,7 @@ const HeroSection = () => {
         </div>
 
         {/* Image-Center Section */}
-        <div className='mt-10 md:mt-[3.75rem]'>
+        <div className='mt-10 md:mt-[3.75rem] flex items-center justify-center'>
           <img src="/hero-img.jpg" alt="black cat on a man's shoulder" className='w-[21.4375rem] md:w-[24.125rem] h-[29.375rem] md:h-[33.0625rem] object-cover rounded-2xl'/>
         </div>
 
