@@ -5,7 +5,6 @@ import { IoIosArrowDown } from "react-icons/io";
 const MobileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selected, setSelected] = useState("Highlight");
-
   const options = ["Highlight", "Cat", "Inspiration", "General"];
 
   return (
