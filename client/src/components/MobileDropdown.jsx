@@ -4,7 +4,6 @@ import { IoIosArrowDown } from "react-icons/io";
 
 const MobileDropdown = ({options, activeTab, setActiveTab}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const options = ["Highlight", "Cat", "Inspiration", "General"];
 
   return (
     <form className="md:hidden w-full mt-4 p-4 bg-brown-200 flex flex-col">
