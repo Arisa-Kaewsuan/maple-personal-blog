@@ -2,10 +2,8 @@ import { useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import { IoIosArrowDown } from "react-icons/io";
 
-const MobileDropdown = () => {
+const MobileDropdown = ({options, activeTab, setActiveTab}) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState("Highlight");
-  const options = ["Highlight", "Cat", "Inspiration", "General"];
 
   return (
     <form className="md:hidden w-full mt-4 p-4 bg-brown-200 flex flex-col">
@@ -28,7 +26,7 @@ const MobileDropdown = () => {
           onClick={() => setIsOpen(!isOpen)}
           className="px-4 bg-white h-12 rounded-[0.5rem] flex justify-between items-center"
         >
-          <span>{selected}</span>
+          <span>{activeTab}</span>
           <IoIosArrowDown className="text-brown-600 w-6 h-6" />
         </button>
 
@@ -39,14 +37,14 @@ const MobileDropdown = () => {
               <button
                 key={option}
                 onClick={() => {
-                  setSelected(option);
+                  setActiveTab(option);
                   setIsOpen(false);
                 }}
                 className={`w-full text-left px-4 py-3 hover:bg-brown-100 rounded-xl ${
-                  selected === option ? "font-medium text-brown-600" : "text-brown-500"
+                  activeTab === option ? "font-medium text-brown-600" : "text-brown-500"
                 }`}
               >
-                {selected === option && "✓ "} {option}
+                {activeTab === option && "✓ "} {option}
               </button>
             ))}
           </div>

@@ -8,20 +8,27 @@ import axios from "axios";
 const ArticleSection = () => {
   const [activeTab, setActiveTab] = useState("Highlight");
   const tabs = ["Highlight", "Cat", "Inspiration", "General"];
+  const [totalPage, setTotalPage] = useState();
 
 
   const [serverData, setServerData] = useState([]);
 
-  const getServerData = async() => {
+  const getServerData = async(page=1) => {
     const response = await axios.get(`https://blog-post-project-api.vercel.app/posts`, {
       params: {
-        category: activeTab === "Highlight"? undefined : activeTab
+        category: activeTab === "Highlight"? undefined : activeTab,
+        page: page 
       }
     });
     // console.log(response);
     // console.log(response.data.posts);
     // console.log(activeTab);
     setServerData(response.data.posts);
+    setTotalPage(response.data.totalPages);
+  }
+
+  const handleChangePage = async (page) => {
+    await getServerData(page);
   }
 
   // console.log(serverData);
@@ -41,7 +48,7 @@ const ArticleSection = () => {
           <MobileDropdown
             activeTab={activeTab}
             setActiveTab={setActiveTab}
-            tabs={tabs}
+            options={tabs}
           />
 
           {/* Latest Search&Filter Show On Desktop */}
@@ -100,12 +107,21 @@ const ArticleSection = () => {
             />
           ))}
         </div>
-        <a
+
+        <div className="flex justify-center cursor-pointer">
+        {
+          Array.from({length: totalPage},(_,k) => k+1).map((page) => (
+              <button onClick={() => handleChangePage(page)} className="ml-5 py-2 px-5 text-white bg-brown-600 rounded-sm">{page}</button>
+          ))
+        }
+        </div>
+
+        {/* <a
           href="#"
           className="mt-12 md:mt-20 underline text-brown-600 text-b1 font-medium flex justify-center"
         >
           View more
-        </a>
+        </a> */}
       </div>
     </>
   );
