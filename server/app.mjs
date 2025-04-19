@@ -193,31 +193,94 @@ app.delete("/posts/:postId", async (req, res) => {
 
 app.get("/posts", async (req, res) => {
   try {
-    const query = `
-      SELECT 
-        posts.id,
-        posts.image,
-        categories.name AS category,
-        posts.title,
-        posts.description,
-        posts.date,
-        posts.content,
-        statuses.status AS status,
-        posts.likes_count
+    const category = req.query.category || "";
+    const keyword = req.query.keyword || "";
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 6;
+
+    const safePage = Math.max(1, page);
+    const safeLimit = Math.max(1, Math.min(100, limit));
+    const offset = (safePage - 1) * safeLimit;
+
+    let query = `
+      SELECT posts.id, posts.image, categories.name AS category, posts.title,
+             posts.description, posts.date, posts.content, statuses.status,
+             posts.likes_count
       FROM posts
-      JOIN categories ON posts.category_id = categories.id
-      JOIN statuses ON posts.status_id = statuses.id
-      ORDER BY posts.date DESC
+      INNER JOIN categories ON posts.category_id = categories.id
+      INNER JOIN statuses ON posts.status_id = statuses.id
     `;
 
-    const result = await connectionPool.query(query);
+    let values = [];
 
-    return res.status(200).json({ data: result.rows });
+    // สร้างเงื่อนไข WHERE ตาม category และ keyword
+    if (category && keyword) {
+      query += `
+        WHERE categories.name ILIKE $1
+        AND (posts.title ILIKE $2 OR posts.description ILIKE $2 OR posts.content ILIKE $2)
+      `;
+      values = [`%${category}%`, `%${keyword}%`];
+    } else if (category) {
+      query += ` WHERE categories.name ILIKE $1`;
+      values = [`%${category}%`];
+    } else if (keyword) {
+      query += `
+        WHERE posts.title ILIKE $1 OR posts.description ILIKE $1 OR posts.content ILIKE $1
+      `;
+      values = [`%${keyword}%`];
+    }
 
+    // เพิ่ม ordering, limit, offset
+    query += ` ORDER BY posts.date DESC LIMIT $${values.length + 1} OFFSET $${values.length + 2}`;
+    values.push(safeLimit, offset);
+
+    const result = await connectionPool.query(query, values);
+
+    // สร้าง query สำหรับนับจำนวนโพสต์ทั้งหมด
+    let countQuery = `
+      SELECT COUNT(*)
+      FROM posts
+      INNER JOIN categories ON posts.category_id = categories.id
+      INNER JOIN statuses ON posts.status_id = statuses.id
+    `;
+    let countValues = values.slice(0, -2);
+
+    if (category && keyword) {
+      countQuery += `
+        WHERE categories.name ILIKE $1
+        AND (posts.title ILIKE $2 OR posts.description ILIKE $2 OR posts.content ILIKE $2)
+      `;
+    } else if (category) {
+      countQuery += ` WHERE categories.name ILIKE $1`;
+    } else if (keyword) {
+      countQuery += `
+        WHERE posts.title ILIKE $1 OR posts.description ILIKE $1 OR posts.content ILIKE $1
+      `;
+    }
+
+    const countResult = await connectionPool.query(countQuery, countValues);
+    const totalPosts = parseInt(countResult.rows[0].count, 10);
+
+    const results = {
+      totalPosts,
+      totalPages: Math.ceil(totalPosts / safeLimit),
+      currentPage: safePage,
+      limit: safeLimit,
+      posts: result.rows,
+    };
+
+    if (offset + safeLimit < totalPosts) {
+      results.nextPage = safePage + 1;
+    }
+    if (offset > 0) {
+      results.previousPage = safePage - 1;
+    }
+
+    return res.status(200).json(results);
   } catch (err) {
     console.error("Database error:", err);
     return res.status(500).json({
-      message: "Server could not read posts because database connection"
+      message: "Server could not read post because database issue",
     });
   }
 });
