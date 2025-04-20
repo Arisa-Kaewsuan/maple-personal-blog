@@ -14,7 +14,7 @@ const ArticleSection = () => {
   const [serverData, setServerData] = useState([]);
 
   const getServerData = async(page=1) => {
-    const response = await axios.get(`https://blog-post-project-api.vercel.app/posts`, {
+    const response = await axios.get(`https://maple-personal-blog.onrender.com/posts`, {
       params: {
         category: activeTab === "Highlight"? undefined : activeTab,
         page: page 

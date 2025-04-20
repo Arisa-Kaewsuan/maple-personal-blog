@@ -1,9 +1,10 @@
 import { Router } from 'express'; 
 import connectionPool from "../utils/db.mjs";
+import validatePosts from '../middleware/post.validation.mjs';
 
 const postsRouter = Router();
 
-postsRouter.post("/", async (req, res) => {
+postsRouter.post("/", validatePosts, async (req, res) => {
     const newPost = {...req.body};
     const { title, image, category_id, description, content, status_id } = newPost;
   
@@ -35,7 +36,7 @@ postsRouter.post("/", async (req, res) => {
     }
 });
   
-postsRouter.get("/:postId", async (req, res) => {
+postsRouter.get("/:postId", validatePosts, async (req, res) => {
     const { postId } = req.params;
   
     if (isNaN(postId)) {
@@ -78,7 +79,7 @@ postsRouter.get("/:postId", async (req, res) => {
     }
 });
   
-postsRouter.put("/:postId", async (req, res) => {
+postsRouter.put("/:postId", validatePosts, async (req, res) => {
     const { postId } = req.params;
     const {
       image,
@@ -141,7 +142,7 @@ postsRouter.put("/:postId", async (req, res) => {
     }
 });
   
-postsRouter.delete("/:postId", async (req, res) => {
+postsRouter.delete("/:postId", validatePosts, async (req, res) => {
     const { postId } = req.params;
   
     if (isNaN(postId)) {
@@ -173,7 +174,7 @@ postsRouter.delete("/:postId", async (req, res) => {
     }
 });
   
-postsRouter.get("/", async (req, res) => {
+postsRouter.get("/", validatePosts, async (req, res) => {
     try {
       const category = req.query.category || "";
       const keyword = req.query.keyword || "";
