@@ -1,5 +1,5 @@
 import { Router } from 'express'; 
-import connectionPool from "./utils/db.mjs";
+import connectionPool from "../utils/db.mjs";
 
 const postsRouter = Router();
 
