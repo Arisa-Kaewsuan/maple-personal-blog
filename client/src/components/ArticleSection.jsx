@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import { RiSearch2Line } from "react-icons/ri";
 import BlogCard from "./BlogCard";
 import MobileDropdown from "./MobileDropdown";
-// import { blogPosts } from "@/data/blogPosts";
-import axios from "axios";
+import { getPosts } from "../api/post";
 
 const ArticleSection = () => {
   const [activeTab, setActiveTab] = useState("Highlight");
@@ -13,13 +12,12 @@ const ArticleSection = () => {
 
   const [serverData, setServerData] = useState([]);
 
-  const getServerData = async(page=1) => {
-    const response = await axios.get(`https://maple-personal-blog.onrender.com/posts`, {
-      params: {
-        category: activeTab === "Highlight"? undefined : activeTab,
-        page: page 
-      }
+  const getServerData = async() => {
+    const response = await getPosts({
+      category: activeTab === "Highlight" ? undefined : activeTab,
+      // page: page 
     });
+    console.log(response);
     // console.log(response);
     // console.log(response.data.posts);
     // console.log(activeTab);
@@ -86,14 +84,6 @@ const ArticleSection = () => {
           </div>
         </div>
         <div className="px-4 md:px-0 grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-          {/* {
-            serverData.map((post) => (
-              <div key={post.id}>
-                <p>{post.category}</p>
-                <p>{post.id}</p>
-              </div>
-            ))
-          } */}
           {serverData.map((post) => (
             <BlogCard
               key={post.id}
@@ -115,14 +105,6 @@ const ArticleSection = () => {
           ))
         }
         </div>
-
-        {/* <a
-          href="#"
-          className="mt-12 md:mt-20 underline text-brown-600 text-b1 font-medium flex justify-center"
-        >
-          View more
-        </a>
-        </a> */}
       </div>
     </>
   );

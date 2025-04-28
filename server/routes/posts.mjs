@@ -36,7 +36,7 @@ postsRouter.post("/", validatePosts, async (req, res) => {
     }
 });
   
-postsRouter.get("/:postId", validatePosts, async (req, res) => {
+postsRouter.get("/:postId", async (req, res) => {
     const { postId } = req.params;
   
     if (isNaN(postId)) {
@@ -174,7 +174,8 @@ postsRouter.delete("/:postId", validatePosts, async (req, res) => {
     }
 });
   
-postsRouter.get("/", validatePosts, async (req, res) => {
+postsRouter.get("/", async (req, res) => {
+    console.log(res);
     try {
       const category = req.query.category || "";
       const keyword = req.query.keyword || "";
